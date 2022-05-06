@@ -1,6 +1,6 @@
 import Card from "@mui/material/Card";
 import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
+import Badge from "@mui/material/Badge";
 import Grid from "@mui/material/Grid";
 import CardHeader from "@mui/material/CardHeader";
 
@@ -19,6 +19,7 @@ const player = ({
 		return {
 			opacity: flag ? 1 : 0.4,
 			pointerEvents: flag ? "initial" : "none",
+			border: flag ? "2px solid #9d29b1" : "",
 		};
 	};
 	const isYourTurn = nextPlayer.id === info.id;
@@ -31,7 +32,7 @@ const player = ({
 						<Button
 							variant="outlined"
 							aria-label="play"
-							color="success"
+							color="secondary"
 							onClick={() => handleDiceAction(info)}>
 							Play
 						</Button>
@@ -44,7 +45,7 @@ const player = ({
 						<CustomizedProgressBars progressBarValue={progressBarValue} />
 					</Grid>
 					<Grid item md={2}>
-						<Typography>{playerScore}</Typography>
+						<Badge color="secondary" badgeContent={playerScore} />
 					</Grid>
 				</Grid>
 			</Card>

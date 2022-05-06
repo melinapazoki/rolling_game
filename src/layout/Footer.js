@@ -1,7 +1,5 @@
 const Footer = () => (
-	<footer style={{ color: "gray", position: "fixed", bottom: 0 }}>
-		<center>Copyright 2022 - Babbel Dice Game </center>
-	</footer>
+	<footer className="footer">Copyright 2022 - Babbel Dice Game</footer>
 );
 
 export default Footer;

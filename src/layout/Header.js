@@ -1,7 +1,5 @@
 const Header = () => (
-	<header style={{ color: "gray", bottom: 0 }}>
-		<center>Copyright ...</center>
-	</header>
+	<header className="header">Babbel case study - Dice rolling Game </header>
 );
 
 export default Header;

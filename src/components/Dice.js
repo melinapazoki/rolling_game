@@ -24,7 +24,12 @@ const Dice = ({ diceResult }) => {
 	const diceImage = diceImgResult ? diceImgResult : rollingDice;
 	return (
 		<Box>
-			<img src={diceImage} alt={`Dice-${diceResult}`} className="dice" />
+			<img
+				width="100px"
+				src={diceImage}
+				alt={`Dice-${diceResult}`}
+				className="dice"
+			/>
 		</Box>
 	);
 };

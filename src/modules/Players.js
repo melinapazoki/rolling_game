@@ -1,20 +1,14 @@
 import Player from "../components/Player";
 import Grid from "@mui/material/Grid";
 
-const players = ({
-	playersInfo,
-	handleDiceAction,
-	playerScore,
-	totalScore,
-	nextPlayer,
-}) => {
+const players = ({ playersInfo, handleDiceAction, totalScore, nextPlayer }) => {
 	return (
 		<Grid container spacing={8}>
 			{playersInfo.map((player) => (
 				<Player
 					key={player.id}
 					info={player}
-					playerScore={playerScore[player.id]}
+					playerScore={player.score}
 					handleDiceAction={handleDiceAction}
 					totalScore={totalScore}
 					nextPlayer={nextPlayer}

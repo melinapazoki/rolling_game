@@ -1,15 +1,17 @@
 import config from "../config";
 
-const handleError = async (e) => {
+export const handleError = async (e) => {
 	// this part should complete by error handling in all posible cases
 	return console.log(e);
 };
-const commonFetch = async (url, Method) => {
+export const commonFetch = async (url, Method, body) => {
 	return await fetch(url, {
 		method: Method,
 		headers: {
 			"Access-Control-Allow-Origin": "*",
+			"Content-Type": "application/json",
 		},
+		body: JSON.stringify(body),
 	})
 		.then(async (result) => {
 			const response = await result.json().catch(() => {
@@ -27,6 +29,7 @@ const fetchGameData = async () => {
 };
 
 const postGameResult = async (matchId, winnerId) => {
+	debugger;
 	const postBody = {
 		matchId,
 		winnerId,

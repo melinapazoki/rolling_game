@@ -6,35 +6,47 @@ import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 
 import Dice from "../components/Dice";
+import useFetchData from "../hooks/useFetchData";
+import { postGameResult } from "../services/api";
 
-const MainGame = ({ players }) => {
-	const [playerScore, setPlayerScore] = useState({});
-
-	let [{ diceResult, playerId, nextPlayerIndex = 0 }, setRollResult] = useState(
-		{},
-	);
+const MainGame = () => {
+	const { data } = useFetchData();
+	const [players, setPlayer] = useState([]);
+	let [{ diceResult, nextPlayerIndex = 0, totalScore = 0 }, setRollResult] =
+		useState({});
 	useEffect(() => {
-		if (Object.keys(playerScore).length === 0) {
-			players.map((player) => (playerScore[player.id] = 0));
+		const { players } = data;
+		if (players) {
+			players.forEach((player) => (player.score = 0));
+			setPlayer(players);
 		}
-		if (playerId) {
-			playerScore[playerId] += diceResult;
-		}
-		setPlayerScore(playerScore);
-	}, [diceResult, playerId, playerScore, nextPlayerIndex]);
+	}, [data]);
 
+	const { scoreToWin, matchId } = data;
 	const handleDiceAction = (playerInfo) => {
 		// find a number between 1 - 6
 		const diceResult = Math.floor(Math.random() * 5) + 1;
+		playerInfo.score += diceResult;
 		//in each action we know who is next player
 		players[nextPlayerIndex + 1] ? nextPlayerIndex++ : (nextPlayerIndex = 0);
+		// to find the total score and winner
+		const totalScore = players.map((i) => i.score).sort()[players.length - 1];
+		//to post winner
+		if (totalScore >= scoreToWin) {
+			(async function () {
+				const result = await postGameResult(matchId, totalScore);
+				console.log("result", result);
+			})();
+		}
+
 		setRollResult({
 			diceResult,
-			playerId: playerInfo.id,
 			nextPlayerIndex,
+			totalScore,
 		});
 	};
 
+	const isGameOver = totalScore >= scoreToWin;
 	return (
 		<Container sx={{ p: 4 }} maxWidth="lg">
 			<Grid container>
@@ -42,17 +54,27 @@ const MainGame = ({ players }) => {
 					<Dice diceResult={diceResult} />
 				</Grid>
 				<Grid item md={4}>
-					<Typography fontWeight={700}>Dice Game</Typography>
-					<Typography fontWeight={700}>Score to win: {scoreToWin}</Typography>
-					<Typography fontWeight={700}>Match Id: {matchId}</Typography>
+					<Typography variant="body1">Match ID: {matchId}</Typography>
+					<Typography>Score To Win:</Typography>
+					{scoreToWin}
 				</Grid>
-				<Players
-					playersInfo={players}
-					handleDiceAction={handleDiceAction}
-					playerScore={playerScore}
-					totalScore={10}
-					nextPlayer={players[nextPlayerIndex]}
-				/>
+
+				{!isGameOver ? (
+					<Grid item md={12} sx={{ p: 2 }}>
+						<Players
+							playersInfo={players}
+							handleDiceAction={handleDiceAction}
+							totalScore={scoreToWin}
+							nextPlayer={players[nextPlayerIndex]}
+						/>
+					</Grid>
+				) : (
+					<Grid item md={12} sx={{ p: 2 }}>
+						<Typography variant="h2" color="secondary">
+							Congratulations, Match is over
+						</Typography>
+					</Grid>
+				)}
 			</Grid>
 		</Container>
 	);
